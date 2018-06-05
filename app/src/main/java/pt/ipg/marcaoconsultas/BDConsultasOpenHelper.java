@@ -24,7 +24,8 @@ public class BDConsultasOpenHelper extends SQLiteOpenHelper {
         DbTablePacientes dbTablePacientes = new DbTablePacientes(db);
         dbTablePacientes.create();
 
-
+        DbTableConsultas dbTableConsultas = new DbTableConsultas(db);
+        dbTableConsultas.create();
 
     }
 

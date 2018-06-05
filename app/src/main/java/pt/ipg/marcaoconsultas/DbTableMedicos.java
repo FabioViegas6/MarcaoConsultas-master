@@ -4,9 +4,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
-/**
- * Created by User on 04/06/2018.
- */
+
 
 public class DbTableMedicos implements BaseColumns {
     // private static final String FIELD_ID_Medi = "idMedicos";
@@ -49,10 +47,7 @@ public class DbTableMedicos implements BaseColumns {
     public long insert(ContentValues values){
         return db.insert(MEDICOS_NAME, null, values);
     }
-
-
-
-
+    
 
 
 }
