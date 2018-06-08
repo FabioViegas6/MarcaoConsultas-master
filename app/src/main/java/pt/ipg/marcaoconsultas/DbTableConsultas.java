@@ -8,9 +8,9 @@ import android.provider.BaseColumns;
 public class DbTableConsultas implements BaseColumns {
 
     private static final String TABLE_NAME = "consultas";
-    private static final String FIELD_DATA = "data";
     private static final String FIELD_MEDICO = "medico";
     private static final String FIELD_PACIENTE = "paciente";
+    public static final String FIELD_DATA = "data";
 
     private SQLiteDatabase db;
 
@@ -21,7 +21,7 @@ public class DbTableConsultas implements BaseColumns {
     public void create(){
         db.execSQL(
                 "CREATE TABLE Consultas (" + _ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        FIELD_DATA + " INTEGER," +
+                        FIELD_DATA + " TEXT NOT NULL," +
                         TABLE_NAME + "TEXT NOT NULL," +
                         FIELD_MEDICO + "TEXT NOT NULL," +
                         FIELD_PACIENTE + "TEXT NOT NULL," +

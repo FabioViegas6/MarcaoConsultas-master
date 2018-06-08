@@ -1,16 +1,17 @@
 package pt.ipg.marcaoconsultas;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
 public class DbTablePacientes implements BaseColumns {
-   // private static final String FIELD_ID = "idPacientes";
-    private static final String FIELD_NAME_Pac = "nome";
-    private static final String FIELD_SEXO = "sexo";
-    private static final String FIELD_MOVEL = "Telemovel";
-    private static final String FIELD_ENDERECO_ELETRON = "email";
+    // private static final String FIELD_ID = "idPacientes";
     public static final String TABLE_PACIENTES = "Pacientes";
+    public static final String FIELD_NAME_Pac = "nome";
+    public static final String FIELD_SEXO = "sexo";
+    public static final String FIELD_MOVEL = "telemovel";
+    public static final String FIELD_ENDERECO_ELETRON = "email";
 
     private SQLiteDatabase db;
 
@@ -47,6 +48,34 @@ public class DbTablePacientes implements BaseColumns {
 
     public long insert(ContentValues values){
         return db.insert(TABLE_PACIENTES, null, values);
+    }
+
+    public static Pacientes getCurrentPacientesBookFromCursor(Cursor cursor){
+
+        final int posIdPac = cursor.getColumnIndex(_ID);
+        final int posNamePac = cursor.getColumnIndex(FIELD_NAME_Pac);
+        final int posEnderEletrPaci = cursor.getColumnIndex(FIELD_ENDERECO_ELETRON);
+        final int posMovelPac = cursor.getColumnIndex(FIELD_MOVEL);
+        final int posSexo = cursor.getColumnIndex(FIELD_SEXO);
+
+        Pacientes pacientes = new Pacientes();
+
+        pacientes.setIdPacinte(cursor.getInt(posIdPac));
+        pacientes.setEmail(cursor.getString(posEnderEletrPaci));
+        pacientes.setNome(cursor.getString(posNamePac));
+        pacientes.setSexo(cursor.getString(posSexo));
+        pacientes.setTelemovel(cursor.getInt(posMovelPac));
+
+
+        return pacientes;
+    }
+
+    public int update(ContentValues values, String whereClause, String[] whereArgs) {
+        return db.update(TABLE_PACIENTES, values, whereClause, whereArgs);
+    }
+
+    public int delete(String whereClause, String[] whereArgs) {
+        return db.delete(TABLE_PACIENTES, whereClause, whereArgs);
     }
 
 }
