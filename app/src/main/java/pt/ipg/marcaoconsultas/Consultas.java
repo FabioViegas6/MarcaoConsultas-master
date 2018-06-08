@@ -4,7 +4,7 @@ package pt.ipg.marcaoconsultas;
 
 public class Consultas {
     private int idConsultas;
-    private int data;
+    private String data;
     private String medico;
     private String pacintes;
 
@@ -16,11 +16,11 @@ public class Consultas {
         this.idConsultas = idConsultas;
     }
 
-    public int getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(int data) {
+    public void setData(String data) {
         this.data = data;
     }
 
