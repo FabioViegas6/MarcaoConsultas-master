@@ -2,7 +2,7 @@ package pt.ipg.marcaoconsultas;
 
 
 
-public class Distrito {
+public class Distritos {
     private int idDis;
     private String nomeDis;
 

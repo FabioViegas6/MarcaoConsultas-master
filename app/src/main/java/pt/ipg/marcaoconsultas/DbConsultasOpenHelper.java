@@ -4,20 +4,22 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class BDConsultasOpenHelper extends SQLiteOpenHelper {
 
 
-    public static final String DATABASE_NAME = "consultas.db";
-    public static final char DATABASE_VERSION = '1';
+public class DbConsultasOpenHelper extends SQLiteOpenHelper {
 
 
-    public BDConsultasOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME,null, DATABASE_VERSION);
+    public static final String DATA_BASE_NAME = "consultas.db";
+    private static final char DATA_BASE_VERSION = '1';
+
+    public DbConsultasOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, DATA_BASE_NAME, factory, DATA_BASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-      DbTableMedicos dbTableMedicos = new DbTableMedicos(db);
+
+        DbTableMedicos dbTableMedicos = new DbTableMedicos(db);
         dbTableMedicos.create();
 
 
@@ -26,6 +28,10 @@ public class BDConsultasOpenHelper extends SQLiteOpenHelper {
 
         DbTableConsultas dbTableConsultas = new DbTableConsultas(db);
         dbTableConsultas.create();
+
+        DbTableDistritos dbTableDistritos = new DbTableDistritos(db);
+        dbTableDistritos.create();
+
 
     }
 
