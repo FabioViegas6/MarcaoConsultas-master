@@ -10,10 +10,10 @@ public class DbConsultasOpenHelper extends SQLiteOpenHelper {
 
 
     public static final String DATA_BASE_NAME = "consultas.db";
-    private static final char DATA_BASE_VERSION = '1';
+    private static final char DATA_BASE_VERSION = 1;
 
-    public DbConsultasOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATA_BASE_NAME, factory, DATA_BASE_VERSION);
+    public DbConsultasOpenHelper(Context context) {
+        super(context, DATA_BASE_NAME, null, DATA_BASE_VERSION);
     }
 
     @Override
