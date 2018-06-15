@@ -82,4 +82,10 @@ public class DbTablePacientes implements BaseColumns {
         return db.delete(TABLE_PACIENTES, whereClause, whereArgs);
     }
 
+
+
+    public Cursor query (String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        return db.query(TABLE_PACIENTES, columns, selection, selectionArgs, groupBy, having, orderBy);
+    }
+
 }

@@ -66,9 +66,9 @@ public class ConsultasDbTest {
                 "=?", IdConsultas );
 
         // update CR(U)D
-        consultas.setTipoConsulta("Saude Mental");
-        consultas.setMedico("Fernando Neves");
-        consultas.setData("23/6/2018");
+        consultas.setTipoConsulta("Psicatria");
+        consultas.setMedico("Fernanda Almeida");
+        consultas.setData("23/07/2018");
         consultas.setPacintes("=?");
         int rowsAffected = tableConsultas.update(
                 DbTableConsultas.getContentValues(consultas),
@@ -82,7 +82,7 @@ public class ConsultasDbTest {
                 "23/6/2018", "Fernando Neves",
                 "=?", IdConsultas );
 
-        /////////////// delete C(R)UD
+        /////////////// delete CRU(D)
 
         rowsAffected = tableConsultas.delete(
                 DbTableConsultas._ID + "=?",
@@ -154,7 +154,30 @@ public class ConsultasDbTest {
         );
         assertEquals("Falha a inserir pacintes", -1, IdPacintes );
 
+        // query/read C(R)UD
+
+        pacientes = ReadFirstPaciente(tablePacientes, "Fabio Vieira", 99342452,
+                "Feminino", "fabia@gmail.com", IdPacintes);
+
     }
 
+    private Pacientes ReadFirstPaciente(DbTablePacientes tablePacientes,
+                                        String expectedNome, long expectedTelemovel,
+                                        String expectedSexo, String expectedEmail, long expectedIdPac){
+        Cursor cursor = tablePacientes.query(DbTablePacientes.All_CoLMNS, null, null,
+                null,null, null);
+        assertEquals("Falha a ler pacintes", 1, cursor.getCount());
+        assertEquals("Falha a ler o primeiro pacinte", cursor.moveToNext());
+
+        Pacientes pacientes = DbTablePacientes.getCurrentPacientesBookFromCursor(cursor);
+
+        assertEquals(" nome do paciente incorreto", expectedNome, pacientes.getNome());
+        assertEquals("telemovel do pacinte incorreto ", expectedTelemovel, pacientes.getTelemovel());
+        assertEquals("sexo do paciente incorreto", expectedSexo, pacientes.getSexo());
+        assertEquals("email do pacinte incorreto", expectedEmail, pacientes.getEmail());
+        assertEquals("id do pacinte incorreto", expectedIdPac, pacientes.getIdPacinte());
+
+        return pacientes;
+    }
 
 }
