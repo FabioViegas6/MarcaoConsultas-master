@@ -55,4 +55,12 @@ public class ConsultasDbTest {
 
 
     }
+    private long insertConsultas (DbTableConsultas tableConsultas, Consultas consultas){
+        long id = tableConsultas.insert(
+                DbTableConsultas.getContentValues(consultas)
+        );
+        assertNotEquals("Falha a inserir consultas", -1, id);
+
+        return id;
+    }
 }
