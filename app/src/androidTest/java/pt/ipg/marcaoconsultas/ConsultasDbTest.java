@@ -159,6 +159,19 @@ public class ConsultasDbTest {
         pacientes = ReadFirstPaciente(tablePacientes, "Fabio Vieira", 99342452,
                 "Feminino", "fabia@gmail.com", IdPacintes);
 
+        // update CR(U)D
+        pacientes.setNome("Fabia Vieira dos Santos");
+        pacientes.setTelemovel(99344433);
+        pacientes.setSexo("Feminino");
+        pacientes.setEmail("fabiaV@gmail.com");
+
+        int ronwFffected = tablePacientes.update(
+                DbTablePacientes.getContentValues(pacientes),
+                DbTablePacientes._ID +"=?",
+                new String[]{Long.toString(IdPacintes)}
+        );
+        assertEquals("Falha a atulizar pacientes", 1, ronwFffected);
+        
     }
 
     private Pacientes ReadFirstPaciente(DbTablePacientes tablePacientes,
