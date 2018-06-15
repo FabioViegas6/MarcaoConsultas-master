@@ -16,6 +16,10 @@ public class DbTableConsultas implements BaseColumns {
     public static final String TABLE_CONSULTAS = "consulta";
     public static final String FIELD_TIPO = "tipodeconsulta";
 
+    public static final String [] All_COLUMNS = new String[] {
+            _ID, FIELD_MEDICO, FIELD_PACIENTE, FIELD_DATA, FIELD_TIPO
+    };
+
     private SQLiteDatabase db;
 
     public DbTableConsultas(SQLiteDatabase db) {

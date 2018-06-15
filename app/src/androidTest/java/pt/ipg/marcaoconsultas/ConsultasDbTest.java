@@ -1,7 +1,9 @@
 package pt.ipg.marcaoconsultas;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -52,6 +54,9 @@ public class ConsultasDbTest {
         Consultas consultas = new Consultas();
         consultas.setTipoConsulta("Saúde Mental");
 
+        // criar e inserir dados (C) RUD
+        Long id = insertConsultas(tableConsultas, consultas);
+
 
 
     }
@@ -62,5 +67,26 @@ public class ConsultasDbTest {
         assertNotEquals("Falha a inserir consultas", -1, id);
 
         return id;
+    }
+
+    @NonNull
+    private Consultas ReadFirstConsultas (DbTableConsultas tableConsultas, String expectedTipo, long expecteIdConsultas,
+                                          String expectedData, String expectedMedico, String expectedPacientes){
+       Cursor cursor = tableConsultas.query(DbTableConsultas.All_COLUMNS, null, null,
+               null,null,null);
+
+       assertEquals("Falha a ler as consultas", 1, cursor.getCount());
+
+       assertTrue("Falha a ler a primeira consulta", cursor.moveToNext());
+
+        Consultas consultas = DbTableConsultas.getCurrentConsultasFromCursor(cursor);
+
+        assertEquals("id da consulta incorretp", expecteIdConsultas, consultas.getIdConsultas());
+        assertEquals("paciente incorreto", expectedPacientes, consultas.getPacintes());
+        assertEquals("data da consulta incorreta ", expectedData, consultas.getData());
+        assertEquals("medico da consulta incorreto", expectedMedico, consultas.getMedico());
+        assertEquals("tipo de consulta incorreto", expectedTipo, consultas.getTipoConsulta());
+
+        return consultas;
     }
 }
