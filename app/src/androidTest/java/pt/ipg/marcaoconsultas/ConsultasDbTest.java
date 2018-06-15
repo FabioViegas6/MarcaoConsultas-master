@@ -171,7 +171,26 @@ public class ConsultasDbTest {
                 new String[]{Long.toString(IdPacintes)}
         );
         assertEquals("Falha a atulizar pacientes", 1, ronwFffected);
-        
+
+        // query/read C(R)UD
+
+        pacientes = ReadFirstPaciente(tablePacientes, "Fabio Vieira dos Santos",
+                99344433, "Feminino", "fabiaV@gmail.com", IdPacintes);
+
+        /// delete CRU (D)
+
+        ronwFffected = tablePacientes.delete(
+                DbTablePacientes._ID + "=?",
+                new String[]{Long.toString(IdPacintes)}
+        );
+
+        assertEquals("Falha a deletar paciente", 1, ronwFffected);
+
+        Cursor cursor = tablePacientes.query(DbTablePacientes.All_CoLMNS, null, null,
+                null,null, null);
+        assertEquals("pacientes econtrados apos ser apagdos?", 0, cursor.getCount());
+
+
     }
 
     private Pacientes ReadFirstPaciente(DbTablePacientes tablePacientes,
