@@ -138,7 +138,23 @@ public class ConsultasDbTest {
         Consultas consultas = new Consultas();
         consultas.setTipoConsulta("Rotina");
 
-        long IdConsulta = insertConsultas(tableConsultas, consultas);
+
+
+        // criar e inserir dados (C) RUD
+
+        Pacientes pacientes = new Pacientes();
+        pacientes.setNome("Fabia Vieira");
+        pacientes.setTelemovel(99342452);
+        pacientes.setSexo("Feminino");
+        pacientes.setEmail("fabia@gmail.com");
+
+
+        long IdPacintes = tablePacientes.insert(
+                DbTablePacientes.getContentValues(pacientes)
+        );
+        assertEquals("Falha a inserir pacintes", -1, IdPacintes );
+
     }
+
 
 }
