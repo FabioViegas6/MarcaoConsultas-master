@@ -52,11 +52,47 @@ public class ConsultasDbTest {
         DbTableConsultas tableConsultas = new DbTableConsultas(db);
 
         Consultas consultas = new Consultas();
-        consultas.setTipoConsulta("Saúde Mental");
+        consultas.setTipoConsulta("Saude Mental");
+        consultas.setMedico("Fernando Neves");
+        consultas.setData("23/6/2018");
+        consultas.setPacintes("=?");
 
         // criar e inserir dados (C) RUD
-        Long id = insertConsultas(tableConsultas, consultas);
+        long IdConsultas = insertConsultas(tableConsultas, consultas);
 
+        // query and read C(R)UD
+        consultas = ReadFirstConsultas(tableConsultas, "Saude Mental",
+                "23/6/2018", "Fernando Neves",
+                "=?", IdConsultas );
+
+        // update CR(U)D
+        consultas.setTipoConsulta("Saude Mental");
+        consultas.setMedico("Fernando Neves");
+        consultas.setData("23/6/2018");
+        consultas.setPacintes("=?");
+        int rowsAffected = tableConsultas.update(
+                DbTableConsultas.getContentValues(consultas),
+                DbTableConsultas._ID + "=?",
+                new String[] {Long.toString(IdConsultas)}
+        );
+        assertEquals("Falha a atualizar a consulta",1, rowsAffected);
+
+        ///////////// query and read C(R)UD
+        consultas = ReadFirstConsultas(tableConsultas, "Saude Mental",
+                "23/6/2018", "Fernando Neves",
+                "=?", IdConsultas );
+
+        /////////////// delete C(R)UD
+
+        rowsAffected = tableConsultas.delete(
+                DbTableConsultas._ID + "=?",
+                new String[] {Long.toString(IdConsultas)}
+        );
+        assertEquals("Falha a deletar consulta",1, rowsAffected);
+
+        Cursor cursor = tableConsultas.query(DbTableConsultas.All_COLUMNS,
+                null, null, null, null, null);
+        assertEquals("consultas encontradas após ser apagada? ", 0, cursor.getCount());
 
 
     }
@@ -70,8 +106,9 @@ public class ConsultasDbTest {
     }
 
     @NonNull
-    private Consultas ReadFirstConsultas (DbTableConsultas tableConsultas, String expectedTipo, long expecteIdConsultas,
-                                          String expectedData, String expectedMedico, String expectedPacientes){
+    private Consultas ReadFirstConsultas(DbTableConsultas tableConsultas, String expectedTipo,
+                                          String expectedData, String expectedMedico,
+                                         String expectedPacientes, long expectedIdConsultas){
        Cursor cursor = tableConsultas.query(DbTableConsultas.All_COLUMNS, null, null,
                null,null,null);
 
@@ -81,7 +118,7 @@ public class ConsultasDbTest {
 
         Consultas consultas = DbTableConsultas.getCurrentConsultasFromCursor(cursor);
 
-        assertEquals("id da consulta incorretp", expecteIdConsultas, consultas.getIdConsultas());
+        assertEquals("id da consulta incorretp", expectedIdConsultas, consultas.getIdConsultas());
         assertEquals("paciente incorreto", expectedPacientes, consultas.getPacintes());
         assertEquals("data da consulta incorreta ", expectedData, consultas.getData());
         assertEquals("medico da consulta incorreto", expectedMedico, consultas.getMedico());
