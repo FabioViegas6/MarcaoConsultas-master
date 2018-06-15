@@ -13,6 +13,10 @@ public class DbTablePacientes implements BaseColumns {
     public static final String FIELD_MOVEL = "telemovel";
     public static final String FIELD_ENDERECO_ELETRON = "email";
 
+    public static final String [] All_CoLMNS = new String[]{
+            _ID, FIELD_NAME_Pac, FIELD_SEXO, FIELD_ENDERECO_ELETRON, FIELD_MOVEL
+    };
+
     private SQLiteDatabase db;
 
     public DbTablePacientes(SQLiteDatabase db) {

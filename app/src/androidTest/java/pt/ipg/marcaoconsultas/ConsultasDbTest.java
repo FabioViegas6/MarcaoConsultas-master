@@ -126,4 +126,19 @@ public class ConsultasDbTest {
 
         return consultas;
     }
+    @Test
+    public void PacientesCRUDtest(){
+
+        DbConsultasOpenHelper dbConsultasOpenHelper = new DbConsultasOpenHelper(getContext());
+        SQLiteDatabase db = dbConsultasOpenHelper.getWritableDatabase();
+
+        DbTableConsultas tableConsultas = new DbTableConsultas(db);
+        DbTablePacientes tablePacientes = new DbTablePacientes(db);
+
+        Consultas consultas = new Consultas();
+        consultas.setTipoConsulta("Rotina");
+
+        long IdConsulta = insertConsultas(tableConsultas, consultas);
+    }
+
 }
