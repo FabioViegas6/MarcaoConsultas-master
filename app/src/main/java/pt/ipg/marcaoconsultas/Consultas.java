@@ -7,6 +7,7 @@ public class Consultas {
     private String data;
     private String medico;
     private String pacintes;
+    private String tipoConsulta;
 
     public int getIdConsultas() {
         return idConsultas;
@@ -38,5 +39,13 @@ public class Consultas {
 
     public void setPacintes(String pacintes) {
         this.pacintes = pacintes;
+    }
+
+    public String getTipoConsulta() {
+        return tipoConsulta;
+    }
+
+    public void setTipoConsulta(String tipoConsulta) {
+        this.tipoConsulta = tipoConsulta;
     }
 }

@@ -40,4 +40,19 @@ public class ConsultasDbTest {
         assertTrue("Não foi possivel abrir ou criar o banco de dados ",db.isOpen());
         db.close();
     }
+
+    @Test
+    public void consultasCRUDtest(){
+
+        DbConsultasOpenHelper dbConsultasOpenHelper = new DbConsultasOpenHelper(getContext());
+        SQLiteDatabase db = dbConsultasOpenHelper.getWritableDatabase();
+
+        DbTableConsultas tableConsultas = new DbTableConsultas(db);
+
+        Consultas consultas = new Consultas();
+        consultas.setTipoConsulta("Saúde Mental");
+
+
+
+    }
 }
