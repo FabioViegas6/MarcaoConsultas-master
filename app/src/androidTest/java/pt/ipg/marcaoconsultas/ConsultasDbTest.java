@@ -152,7 +152,7 @@ public class ConsultasDbTest {
         long IdPacintes = tablePacientes.insert(
                 DbTablePacientes.getContentValues(pacientes)
         );
-        assertEquals("Falha a inserir pacintes", -1, IdPacintes );
+        assertNotEquals("Falha a inserir pacintes", -1, IdPacintes );
 
         // query/read C(R)UD
 
@@ -236,8 +236,36 @@ public class ConsultasDbTest {
 
          assertEquals("Falha a inserir medico", -1, idMed);
 
+        // query/read C(R)UD
+        medicos = ReadFirstMedicos(tableMedicos, "Joao Maia", "maia2@gmail.com", 909090901, idMed);
 
+        // update CR(U)D
+        medicos.setNomeMed("Joao Matos");
+        medicos.setEmailMed("matos1@gmail.com");
+        medicos.setTelemovelmed(929292921);
+
+        int rowsAffected = tableMedicos.update(DbTableMedicos.getContentValues(medicos),
+                DbTableMedicos._ID + "=?",
+                new String[]{Long.toString(idMed)});
+        assertEquals("Falha a atualizar o medico", 1, rowsAffected);
+
+        // query/read C(R)UD
+
+        medicos = ReadFirstMedicos(tableMedicos, "Joao Matos",
+                "matos1@gmail.com", 929292921, idMed);
+
+
+        // delete CRU(D)
+        rowsAffected = tableMedicos.delete(DbTableMedicos._ID + "=?",
+                new String[]{Long.toString(idMed)});
+        assertEquals("Falha a deletar medico", 1, rowsAffected);
+
+        Cursor cursor = tableMedicos.query(DbTableMedicos.ALL_COLUMNS_Med, null, null,
+                null, null,null);
+        assertEquals("medicos encontrados?", 0, cursor.getCount());
     }
+
+
 
 
     private  Medicos ReadFirstMedicos(DbTableMedicos tableMedicos, String espectednomeMed,
@@ -256,6 +284,39 @@ public class ConsultasDbTest {
         assertEquals("email do medico incorreto", espectedEmail, medicos.getEmailMed());
 
         return medicos;
+    }
+
+    @Test
+    public void distritoCRUDtest(){
+
+        DbConsultasOpenHelper dbConsultasOpenHelper = new DbConsultasOpenHelper(getContext());
+        SQLiteDatabase db = dbConsultasOpenHelper.getWritableDatabase();
+
+        DbTableDistritos tableDistritos = new DbTableDistritos(db);
+
+        //  // criar e inserir dados (C) RUD
+        Distritos distritos = new Distritos();
+
+        distritos.setNomeDis("Guarda");
+        long idDis = tableDistritos.insert(DbTableDistritos.getContentValues(distritos));
+        assertNotEquals("Falha a inserir distrito", -1, idDis);
+        
+    }
+
+
+
+    private Distritos ReadFirstDistritos(DbTableDistritos tableDistritos,
+                                         String espectedNomedis, long expectedIdDis){
+        Cursor cursor = tableDistritos.query(DbTableDistritos.All_CLUMNS_DIS, null, null,
+                null, null, null);
+        assertEquals("Falha a ler Distritod", 1, cursor.getCount());
+        assertTrue("Falaha a ler o primeiro distrito", cursor.moveToNext());
+
+        Distritos distritos = DbTableDistritos.getCurrentDistritosFromCursor(cursor);
+        assertEquals("Nome do dostrito incorreto", espectedNomedis, distritos.getNomeDis());
+        assertEquals("id do dostrito incorreto", expectedIdDis, distritos.getIdDis());
+
+        return distritos;
     }
 
 }

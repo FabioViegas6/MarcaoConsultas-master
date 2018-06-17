@@ -13,6 +13,7 @@ public class DbTableDistritos implements BaseColumns {
         public static final String TABLE_DIS = "distritos";
         private static final String FIELD_NAME_DIS = "nome";
 
+        public  static final  String[] All_CLUMNS_DIS = new String[]{_ID, FIELD_NAME_DIS};
 
 
         private SQLiteDatabase db;
