@@ -92,7 +92,7 @@ public class ConsultasDbTest {
 
         Cursor cursor = tableConsultas.query(DbTableConsultas.All_COLUMNS,
                 null, null, null, null, null);
-        assertEquals("consultas encontradas após ser apagada? ", 0, cursor.getCount());
+        assertEquals("consultas encontradas após serem apagadas? ", 0, cursor.getCount());
 
 
     }
@@ -262,7 +262,7 @@ public class ConsultasDbTest {
 
         Cursor cursor = tableMedicos.query(DbTableMedicos.ALL_COLUMNS_Med, null, null,
                 null, null,null);
-        assertEquals("medicos encontrados?", 0, cursor.getCount());
+        assertEquals("medicos encontrados após a atualização de exclusão?", 0, cursor.getCount());
     }
 
 
@@ -310,9 +310,22 @@ public class ConsultasDbTest {
         int rowsAffected = tableDistritos.update( DbTableDistritos.getContentValues(distritos),
                 DbTableDistritos._ID + "=?", new String[]{Long.toString(idDis)});
         assertNotEquals("Falha a atualizar distrito", 1, rowsAffected);
+
+        // criar e inserir dados (C) RUD
+        distritos = ReadFirstDistritos(tableDistritos, "Viseu", idDis);
+
+        // delete CRU(D)
+
+        rowsAffected = tableDistritos.delete(DbTableDistritos._ID + "=?",
+                new String[]{Long.toString(idDis)});
+
+        assertEquals("Falha a deletar distrito", 1, rowsAffected);
+
+        Cursor cursor = tableDistritos.query(DbTableDistritos.All_CLUMNS_DIS, null, null,
+                null, null, null);
+        assertEquals("distritos encontrados após a atualização de exclusão", 0, cursor.getCount());
+
     }
-
-
 
     private Distritos ReadFirstDistritos(DbTableDistritos tableDistritos,
                                          String espectedNomedis, long expectedIdDis){
