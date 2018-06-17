@@ -224,7 +224,18 @@ public class ConsultasDbTest {
         consultas.setTipoConsulta("Rotina");
 
         DbTableMedicos tableMedicos = new DbTableMedicos(db);
-        
+
+        //  // criar e inserir dados (C) RUD
+
+        Medicos medicos = new Medicos();
+         medicos.setNomeMed("Joao Maia");
+         medicos.setTelemovelmed(909090901);
+         medicos.setEmailMed("maia2@gmail.com");
+
+         long idMed = tableMedicos.insert(DbTableMedicos.getContentValues(medicos));
+
+         assertEquals("Falha a inserir medico", -1, idMed);
+
 
     }
 
