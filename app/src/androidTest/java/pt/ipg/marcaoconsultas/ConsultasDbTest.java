@@ -300,7 +300,16 @@ public class ConsultasDbTest {
         distritos.setNomeDis("Guarda");
         long idDis = tableDistritos.insert(DbTableDistritos.getContentValues(distritos));
         assertNotEquals("Falha a inserir distrito", -1, idDis);
-        
+
+        // query/read C(R)UD
+        distritos = ReadFirstDistritos(tableDistritos, "Guarda", idDis);
+
+        // update CR(U)D
+        distritos.setNomeDis("Viseu");
+
+        int rowsAffected = tableDistritos.update( DbTableDistritos.getContentValues(distritos),
+                DbTableDistritos._ID + "=?", new String[]{Long.toString(idDis)});
+        assertNotEquals("Falha a atualizar distrito", 1, rowsAffected);
     }
 
 
