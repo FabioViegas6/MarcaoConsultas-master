@@ -14,7 +14,7 @@ public class DbTableMedicos implements BaseColumns {
     public static final String MEDICOS_NAME = "nome";
     private static final String FIELD_MOVEL = "telemovel";
 
-    public static final String [] ALL_COLUMNS = new String[] {
+    public static final String [] ALL_COLUMNS_Med = new String[] {
             _ID, FIELD_NAME_MED, FIELD_ENDERECO_ELETRON_MED, FIELD_MOVEL
     };
 

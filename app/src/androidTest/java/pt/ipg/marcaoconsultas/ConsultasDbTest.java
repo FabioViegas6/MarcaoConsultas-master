@@ -212,4 +212,39 @@ public class ConsultasDbTest {
         return pacientes;
     }
 
+    @Test
+    public  void medicosCRUDtest(){
+
+        DbConsultasOpenHelper dbConsultasOpenHelper = new DbConsultasOpenHelper(getContext());
+        SQLiteDatabase db = dbConsultasOpenHelper.getWritableDatabase();
+
+        DbTableConsultas tableConsultas = new DbTableConsultas(db);
+
+        Consultas consultas = new Consultas();
+        consultas.setTipoConsulta("Rotina");
+
+        DbTableMedicos tableMedicos = new DbTableMedicos(db);
+        
+
+    }
+
+
+    private  Medicos ReadFirstMedicos(DbTableMedicos tableMedicos, String espectednomeMed,
+                                      String espectedEmail, long espectedMovel, long espectedId){
+       Cursor cursor = tableMedicos.query(DbTableMedicos.ALL_COLUMNS_Med, null, null,
+               null, null,null);
+
+       assertEquals("Falha a ler medicos", 1, cursor.getCount());
+       assertTrue("Falaha a ler o primeiro medico", cursor.moveToNext());
+
+        Medicos medicos = DbTableMedicos.getCurrentMedicosFromCursor(cursor);
+
+        assertEquals("nome do medico incorreto", espectednomeMed, medicos.getNomeMed());
+        assertEquals("telemovel do medico incorreto", espectedMovel, medicos.getTelemovelmed());
+        assertEquals("id dp medico incoreto", espectedId, medicos.getContribuinteMed());
+        assertEquals("email do medico incorreto", espectedEmail, medicos.getEmailMed());
+
+        return medicos;
+    }
+
 }
