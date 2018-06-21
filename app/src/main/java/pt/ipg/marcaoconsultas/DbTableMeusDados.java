@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
-public class DbTablePacientes implements BaseColumns {
+public class DbTableMeusDados implements BaseColumns {
     public static final String TABLE_NAME = "MeusDados";
     public static final String FIELD_NAME = "nome";
     public static final String FIELD_MOVEL = "telemovel";
@@ -17,7 +17,7 @@ public class DbTablePacientes implements BaseColumns {
 
     private SQLiteDatabase db;
 
-    public DbTablePacientes(SQLiteDatabase db) {
+    public DbTableMeusDados(SQLiteDatabase db) {
         this.db = db;
     }
 
@@ -37,13 +37,13 @@ public class DbTablePacientes implements BaseColumns {
         );
     }
 
-    public static ContentValues getContentValues(MeusDados pacientes){
+    public static ContentValues getContentValues(MeusDados meusDados){
         ContentValues values = new ContentValues();
 
-        values.put(FIELD_NAME, pacientes.getNome());
-        values.put(_ID, pacientes.getId());
-        values.put(FIELD_ID_CONSULTAS, pacientes.getIdconsultas());
-        values.put(FIELD_MOVEL, pacientes.getTelemovel());
+        values.put(FIELD_NAME, meusDados.getNome());
+        values.put(_ID, meusDados.getId());
+        values.put(FIELD_ID_CONSULTAS, meusDados.getIdconsultas());
+        values.put(FIELD_MOVEL, meusDados.getTelemovel());
 
         return values;
     }
@@ -52,7 +52,7 @@ public class DbTablePacientes implements BaseColumns {
         return db.insert(TABLE_NAME, null, values);
     }
 
-    public static MeusDados getCurrentPacientesBookFromCursor(Cursor cursor){
+    public static MeusDados getCurrentDadosBookFromCursor(Cursor cursor){
 
         final int posId = cursor.getColumnIndex(_ID);
         final int posName = cursor.getColumnIndex(FIELD_NAME);
