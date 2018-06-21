@@ -142,7 +142,7 @@ public class ConsultasDbTest {
 
         // criar e inserir dados (C) RUD
 
-        Pacientes pacientes = new Pacientes();
+        MeusDados pacientes = new MeusDados();
         pacientes.setNome("Fabia Vieira");
         pacientes.setTelemovel(99342452);
         pacientes.setSexo("Feminino");
@@ -193,7 +193,7 @@ public class ConsultasDbTest {
 
     }
 
-    private Pacientes ReadFirstPaciente(DbTablePacientes tablePacientes,
+    private MeusDados ReadFirstPaciente(DbTablePacientes tablePacientes,
                                         String expectedNome, long expectedTelemovel,
                                         String expectedSexo, String expectedEmail, long expectedIdPac){
         Cursor cursor = tablePacientes.query(DbTablePacientes.All_CoLMNS, null, null,
@@ -201,7 +201,7 @@ public class ConsultasDbTest {
         assertEquals("Falha a ler pacintes", 1, cursor.getCount());
         assertEquals("Falha a ler o primeiro pacinte", cursor.moveToNext());
 
-        Pacientes pacientes = DbTablePacientes.getCurrentPacientesBookFromCursor(cursor);
+        MeusDados pacientes = DbTablePacientes.getCurrentPacientesBookFromCursor(cursor);
 
         assertEquals(" nome do paciente incorreto", expectedNome, pacientes.getNome());
         assertEquals("telemovel do pacinte incorreto ", expectedTelemovel, pacientes.getTelemovel());

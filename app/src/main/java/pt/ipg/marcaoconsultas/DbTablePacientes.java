@@ -6,15 +6,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
 public class DbTablePacientes implements BaseColumns {
-    // private static final String FIELD_ID = "idPacientes";
-    public static final String TABLE_PACIENTES = "Pacientes";
-    public static final String FIELD_NAME_Pac = "nome";
-    public static final String FIELD_SEXO = "sexo";
+    public static final String TABLE_NAME = "MeusDados";
+    public static final String FIELD_NAME = "nome";
     public static final String FIELD_MOVEL = "telemovel";
-    public static final String FIELD_ENDERECO_ELETRON = "email";
+    public static final String FIELD_ID_CONSULTAS = "IdConsultas";
 
     public static final String [] All_CoLMNS = new String[]{
-            _ID, FIELD_NAME_Pac, FIELD_SEXO, FIELD_ENDERECO_ELETRON, FIELD_MOVEL
+            _ID, FIELD_NAME, FIELD_ID_CONSULTAS, FIELD_MOVEL
     };
 
     private SQLiteDatabase db;
@@ -26,66 +24,65 @@ public class DbTablePacientes implements BaseColumns {
 
     public void create() {
         db.execSQL(
-                "CREATE TABLE " + TABLE_PACIENTES + "("
+                "CREATE TABLE " + TABLE_NAME + "("
                         + _ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
-                       // FIELD_ID + " INTEGER," +
-                        FIELD_NAME_Pac + "TEXT NOT NULL," +
-                        FIELD_SEXO + "TEXT NOT NULL," +
+                        FIELD_NAME + "TEXT NOT NULL," +
                         FIELD_MOVEL + "INTEGER," +
-                        FIELD_ENDERECO_ELETRON + "TEXT NOT NULL" +
+                        FIELD_ID_CONSULTAS + "INTEGER," +
+                        "FOREIGN KEY (" + FIELD_ID_CONSULTAS + ") REFERENCES " +
+                        DbTableConsultas.TABLE_CONSULTAS +
+                        "(" + DbTableConsultas._ID +")" +
                         ")"
 
         );
     }
 
-    public static ContentValues getContentValues(Pacientes pacientes){
+    public static ContentValues getContentValues(MeusDados pacientes){
         ContentValues values = new ContentValues();
 
-        values.put(FIELD_NAME_Pac, pacientes.getNome());
-        values.put(_ID, pacientes.getIdPacinte());
-        values.put(FIELD_ENDERECO_ELETRON, pacientes.getEmail());
+        values.put(FIELD_NAME, pacientes.getNome());
+        values.put(_ID, pacientes.getId());
+        values.put(FIELD_ID_CONSULTAS, pacientes.getIdconsultas());
         values.put(FIELD_MOVEL, pacientes.getTelemovel());
-        values.put(FIELD_SEXO, pacientes.getSexo());
 
         return values;
     }
 
     public long insert(ContentValues values){
-        return db.insert(TABLE_PACIENTES, null, values);
+        return db.insert(TABLE_NAME, null, values);
     }
 
-    public static Pacientes getCurrentPacientesBookFromCursor(Cursor cursor){
+    public static MeusDados getCurrentPacientesBookFromCursor(Cursor cursor){
 
-        final int posIdPac = cursor.getColumnIndex(_ID);
-        final int posNamePac = cursor.getColumnIndex(FIELD_NAME_Pac);
-        final int posEnderEletrPaci = cursor.getColumnIndex(FIELD_ENDERECO_ELETRON);
-        final int posMovelPac = cursor.getColumnIndex(FIELD_MOVEL);
-        final int posSexo = cursor.getColumnIndex(FIELD_SEXO);
+        final int posId = cursor.getColumnIndex(_ID);
+        final int posName = cursor.getColumnIndex(FIELD_NAME);
+        final int posIdCons = cursor.getColumnIndex(FIELD_ID_CONSULTAS);
+        final int posMovel = cursor.getColumnIndex(FIELD_MOVEL);
 
-        Pacientes pacientes = new Pacientes();
+        MeusDados meusDados = new MeusDados();
 
-        pacientes.setIdPacinte(cursor.getInt(posIdPac));
-        pacientes.setEmail(cursor.getString(posEnderEletrPaci));
-        pacientes.setNome(cursor.getString(posNamePac));
-        pacientes.setSexo(cursor.getString(posSexo));
-        pacientes.setTelemovel(cursor.getInt(posMovelPac));
+        meusDados.setId(cursor.getInt(posId));
+        meusDados.setNome(cursor.getString(posName));
+        meusDados.setTelemovel(cursor.getInt(posMovel));
+        meusDados.setIdconsultas(cursor.getInt(posIdCons));
 
 
-        return pacientes;
+
+        return meusDados;
     }
 
     public int update(ContentValues values, String whereClause, String[] whereArgs) {
-        return db.update(TABLE_PACIENTES, values, whereClause, whereArgs);
+        return db.update(TABLE_NAME, values, whereClause, whereArgs);
     }
 
     public int delete(String whereClause, String[] whereArgs) {
-        return db.delete(TABLE_PACIENTES, whereClause, whereArgs);
+        return db.delete(TABLE_NAME, whereClause, whereArgs);
     }
 
 
 
     public Cursor query (String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
-        return db.query(TABLE_PACIENTES, columns, selection, selectionArgs, groupBy, having, orderBy);
+        return db.query(TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
     }
 
 }
