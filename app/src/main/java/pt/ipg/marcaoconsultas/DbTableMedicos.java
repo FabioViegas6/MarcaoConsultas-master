@@ -8,14 +8,11 @@ import android.database.Cursor;
 
 
 public class DbTableMedicos implements BaseColumns {
-    // private static final String FIELD_ID_Medi = "idMedicos";
     private static final String FIELD_NAME_MED = "medicos";
-    private static final String FIELD_ENDERECO_ELETRON_MED = "email";
     public static final String MEDICOS_NAME = "nome";
-    private static final String FIELD_MOVEL = "telemovel";
 
     public static final String [] ALL_COLUMNS_Med = new String[] {
-            _ID, FIELD_NAME_MED, FIELD_ENDERECO_ELETRON_MED, FIELD_MOVEL
+            _ID, FIELD_NAME_MED
     };
 
 
@@ -30,10 +27,7 @@ public class DbTableMedicos implements BaseColumns {
         db.execSQL(
                 "CREATE TABLE " + MEDICOS_NAME +
                         " (" + _ID + "INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        //  FIELD_ID_Medi + " INTEGER," +
-                        FIELD_NAME_MED + "TEXT NOT NULL," +
-                        FIELD_MOVEL + "INTEGER," +
-                        FIELD_ENDERECO_ELETRON_MED + "TEXT NOT NULL" +
+                        FIELD_NAME_MED + "TEXT NOT NULL" +
                         ")"
 
         );
@@ -43,9 +37,7 @@ public class DbTableMedicos implements BaseColumns {
         ContentValues values = new ContentValues();
 
         values.put(FIELD_NAME_MED, medicos.getNomeMed());
-        values.put(_ID, medicos.getContribuinteMed());
-        values.put(FIELD_ENDERECO_ELETRON_MED, medicos.getEmailMed());
-        values.put(FIELD_MOVEL, medicos.getTelemovelmed());
+        values.put(_ID, medicos.getId());
 
         return values;
     }
@@ -54,15 +46,12 @@ public class DbTableMedicos implements BaseColumns {
     public static Medicos getCurrentMedicosFromCursor(Cursor cursor) {
         final int posIdMedico = cursor.getColumnIndex(_ID);
         final int posNameMedico = cursor.getColumnIndex(FIELD_NAME_MED);
-        final int posEnderecoEletro = cursor.getColumnIndex(FIELD_ENDERECO_ELETRON_MED);
-        final int posMovelMed = cursor.getColumnIndex(FIELD_MOVEL);
+
 
         Medicos medicos = new Medicos();
 
-        medicos.setContribuinteMed(cursor.getInt(posIdMedico));
-        medicos.setEmailMed(cursor.getString(posEnderecoEletro));
+        medicos.setId(cursor.getInt(posIdMedico));
         medicos.setNomeMed(cursor.getString(posNameMedico));
-        medicos.setTelemovelmed(cursor.getInt(posMovelMed));
 
         return medicos;
     }

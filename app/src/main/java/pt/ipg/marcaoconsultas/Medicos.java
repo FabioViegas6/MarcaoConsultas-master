@@ -2,9 +2,9 @@ package pt.ipg.marcaoconsultas;
 
 public class Medicos {
     private String nomeMed;
-    private int contribuinteMed;
-    private int telemovelmed;
-    private String emailMed;
+    private int id;
+
+
 
     public String getNomeMed() {
         return nomeMed;
@@ -14,27 +14,13 @@ public class Medicos {
         this.nomeMed = nomeMed;
     }
 
-    public int getContribuinteMed() {
-        return contribuinteMed;
+    public int getId() {
+        return id;
     }
 
-    public void setContribuinteMed(int contribuinteMed) {
-        this.contribuinteMed = contribuinteMed;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getTelemovelmed() {
-        return telemovelmed;
-    }
 
-    public void setTelemovelmed(int telemovelmed) {
-        this.telemovelmed = telemovelmed;
-    }
-
-    public String getEmailMed() {
-        return emailMed;
-    }
-
-    public void setEmailMed(String emailMed) {
-        this.emailMed = emailMed;
-    }
 }

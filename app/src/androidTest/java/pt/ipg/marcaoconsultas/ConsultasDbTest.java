@@ -280,7 +280,7 @@ public class ConsultasDbTest {
 
         assertEquals("nome do medico incorreto", espectednomeMed, medicos.getNomeMed());
         assertEquals("telemovel do medico incorreto", espectedMovel, medicos.getTelemovelmed());
-        assertEquals("id dp medico incoreto", espectedId, medicos.getContribuinteMed());
+        assertEquals("id dp medico incoreto", espectedId, medicos.getId());
         assertEquals("email do medico incorreto", espectedEmail, medicos.getEmailMed());
 
         return medicos;
