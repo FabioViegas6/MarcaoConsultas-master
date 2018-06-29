@@ -39,12 +39,14 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:minHeight="250dp">
 
             <include
                 layout="@layout/content_edit_consulta"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="315dp"
+                android:visibility="visible" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
