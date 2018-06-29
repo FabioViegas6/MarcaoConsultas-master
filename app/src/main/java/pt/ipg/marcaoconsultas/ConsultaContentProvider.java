@@ -4,7 +4,11 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -14,14 +18,14 @@ public class ConsultaContentProvider extends ContentProvider {
 
     private static final String AUTHORITY = "pt.ipg.marcaoconsultas";
 
-    private static int CONSULTA = 100;
-    private static int ID_CONSULTA = 101;
-    private static int MEUS_DADOS = 200;
-    private static int ID_DADOS = 201;
-    private static int MEDICO = 300;
-    private static int ID_MEDICO = 301;
-    private static int DISTRITO = 400;
-    private static int ID_DISTRITO = 401;
+    private static final int CONSULTA = 100;
+    private static final int ID_CONSULTA = 101;
+    private static final int MEUS_DADOS = 200;
+    private static final int ID_DADOS = 201;
+    private static final int MEDICO = 300;
+    private static final int ID_MEDICO = 301;
+    private static final int DISTRITO = 400;
+    private static final int ID_DISTRITO = 401;
 
     private static final String MULTIPLE_ITENS = "vnd.android.cursor.dir" ;
     private static final String SINGLE_ITEM = "vnd.android.cursor.item";
@@ -74,34 +78,291 @@ public class ConsultaContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        return false;
+        consultasOpenHelper = new DbConsultasOpenHelper(getContext());
+
+        return true;
     }
+
+    /**
+     * Implement this to handle query requests from clients.
+     *
+     * <p>Apps targeting {@link android.os.Build.VERSION_CODES#O} or higher should override
+     * {@link #query(Uri, String[], Bundle, CancellationSignal)} and provide a stub
+     * implementation of this method.
+     *
+     * <p>This method can be called from multiple threads, as described in
+     * <a href="{@docRoot}guide/topics/fundamentals/processes-and-threads.html#Threads">Processes
+     * and Threads</a>.
+     * <p>
+     * Example client call:<p>
+     * <pre>// Request a specific record.
+     * Cursor managedCursor = managedQuery(
+     ContentUris.withAppendedId(Contacts.People.CONTENT_URI, 2),
+     projection,    // Which columns to return.
+     null,          // WHERE clause.
+     null,          // WHERE clause value substitution
+     People.NAME + " ASC");   // Sort order.</pre>
+     * Example implementation:<p>
+     * <pre>// SQLiteQueryBuilder is a helper class that creates the
+     // proper SQL syntax for us.
+     SQLiteQueryBuilder qBuilder = new SQLiteQueryBuilder();
+
+     // Set the table we're querying.
+     qBuilder.setTables(DATABASE_TABLE_NAME);
+
+     // If the query ends in a specific record number, we're
+     // being asked for a specific record, so set the
+     // WHERE clause in our query.
+     if((URI_MATCHER.match(uri)) == SPECIFIC_MESSAGE){
+     qBuilder.appendWhere("_id=" + uri.getPathLeafId());
+     }
+
+     // Make the query.
+     Cursor c = qBuilder.query(mDb,
+     projection,
+     selection,
+     selectionArgs,
+     groupBy,
+     having,
+     sortOrder);
+     c.setNotificationUri(getContext().getContentResolver(), uri);
+     return c;</pre>
+     *
+     * @param uri The URI to query. This will be the full URI sent by the client;
+     *      if the client is requesting a specific record, the URI will end in a record number
+     *      that the implementation should parse and add to a WHERE or HAVING clause, specifying
+     *      that _id value.
+     * @param projection The list of columns to put into the cursor. If
+     *      {@code null} all columns are included.
+     * @param selection A selection criteria to apply when filtering rows.
+     *      If {@code null} then all rows are included.
+     * @param selectionArgs You may include ?s in selection, which will be replaced by
+     *      the values from selectionArgs, in order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If {@code null} then the provider is free to define the sort order.
+     * @return a Cursor or {@code null}.
+     */
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return null;
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection,
+                        @Nullable String selection, @Nullable String[] selectionArgs,
+                        @Nullable String sortOrder) {
+
+        SQLiteDatabase db = consultasOpenHelper.getReadableDatabase();
+
+        String id = uri.getLastPathSegment();
+        UriMatcher matcher = getConsultasUriMatcher();
+
+        switch (matcher.match(uri)){
+            case CONSULTA:
+                return new DbTableConsultas(db).query(projection, selection, selectionArgs,
+                        null, null, sortOrder);
+            case ID_CONSULTA:
+                return new DbTableConsultas(db).query(projection, DbTableConsultas._ID + "=?",
+                        new String[] {id}, null, null, null);
+            case MEUS_DADOS:
+                return new DbTableMeusDados(db).query(projection, selection, selectionArgs,
+                        null, null, null);
+
+            case MEDICO:
+                return new DbTableMedicos(db).query(projection, selection, selectionArgs,
+                        null, null, null);
+
+            case DISTRITO:
+                return new DbTableMeusDados(db).query(projection, selection, selectionArgs,
+                        null, null, null);
+
+            case ID_MEDICO:
+                return new DbTableMedicos(db).query(projection,
+                        DbTableMedicos._ID + "=?",
+                        new String[] {id}, null, null, null);
+
+            case ID_DADOS:
+                return new DbTableMeusDados(db).query(projection,
+                        DbTableMeusDados._ID + "=?",
+                        new String[] {id}, null, null, null);
+
+            case ID_DISTRITO:
+                return new DbTableDistritos(db).query(projection,
+                        DbTableDistritos._ID + "=?",
+                        new String[] {id}, null, null, null);
+
+            default:
+                throw new UnsupportedOperationException("Uri Invalido:" + uri);
+        }
+
     }
 
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+
+        UriMatcher matcher = getConsultasUriMatcher();
+
+        switch (matcher.match(uri)){
+            case CONSULTA:
+                return MULTIPLE_ITENS + "/" + AUTHORITY + "/" +
+                        DbTableConsultas.TABLE_CONSULTAS;
+            case ID_CONSULTA:
+                return SINGLE_ITEM + "/" + AUTHORITY + "/" +
+                        DbTableConsultas.TABLE_CONSULTAS;
+
+
+            case MEUS_DADOS:
+                return MULTIPLE_ITENS + "/" + AUTHORITY + "/" +
+                        DbTableMeusDados.TABLE_NAME;
+            case ID_DADOS:
+                return SINGLE_ITEM + "/" + AUTHORITY + "/" +
+                        DbTableMeusDados.TABLE_NAME;
+
+
+            case MEDICO:
+                return MULTIPLE_ITENS + "/" + AUTHORITY + "/" +
+                        DbTableMedicos.MEDICOS_NAME;
+            case ID_MEDICO:
+                return SINGLE_ITEM + "/" + AUTHORITY + "/" +
+                        DbTableMedicos.MEDICOS_NAME;
+
+
+            case DISTRITO:
+                return MULTIPLE_ITENS + "/" + AUTHORITY + "/" +
+                        DbTableDistritos.TABLE_DIS;
+            case ID_DISTRITO:
+                return SINGLE_ITEM + "/" + AUTHORITY + "/" +
+                        DbTableDistritos.TABLE_DIS;
+
+            default:
+                throw new UnsupportedOperationException("Unknown URI: " + uri);
+        }
+
     }
 
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        return null;
+
+        SQLiteDatabase db = consultasOpenHelper.getWritableDatabase();
+        UriMatcher matcher = getConsultasUriMatcher();
+
+        long id = -1;
+
+        switch (matcher.match(uri)){
+            case CONSULTA:
+                id = new DbTableConsultas(db).insert(values);
+                break;
+            case MEDICO:
+                id = new DbTableMedicos(db).insert(values);
+                break;
+            case MEUS_DADOS:
+                id = new DbTableMeusDados(db).insert(values);
+                break;
+            case DISTRITO:
+                id = new DbTableDistritos(db).insert(values);
+                break;
+
+
+            default:
+                throw new UnsupportedOperationException("Unknown URI: " + uri);
+        }
+        if (id > 0) {
+            notifyChanges(uri);
+            return Uri.withAppendedPath(uri, Long.toString(id));
+        }else {
+            throw new SQLException(" não foi possivel inserir registo");
+        }
+
     }
+
+    private void notifyChanges(@NonNull Uri uri){
+        getContext().getContentResolver().notifyChange(uri, null);
+    }
+
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+
+        SQLiteDatabase db = consultasOpenHelper.getWritableDatabase();
+
+        UriMatcher matcher = getConsultasUriMatcher();
+        String id = uri.getLastPathSegment();
+
+        int linhas = 0;
+
+        switch (matcher.match(uri)){
+
+            case ID_CONSULTA:
+                linhas = new DbTableConsultas(db).delete( DbTableConsultas._ID + "=?",
+                        new String[] { id });
+
+            case ID_MEDICO:
+                linhas = new DbTableMedicos(db).delete(
+                        DbTableMedicos._ID + "=?",
+                        new String[] {id});
+                break;
+
+            case ID_DADOS:
+                linhas = new DbTableMeusDados(db).delete(
+                        DbTableMeusDados._ID + "=?",
+                        new String[] {id});
+                break;
+
+            case ID_DISTRITO:
+                linhas = new DbTableDistritos(db).delete(
+                        DbTableDistritos._ID + "=?",
+                        new String[] {id});
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Uri Invalido:" + uri);
+
+        }
+
+        if(linhas > 0) notifyChanges(uri);
+        return linhas;
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+
+       SQLiteDatabase db = consultasOpenHelper.getWritableDatabase();
+       UriMatcher matcher = getConsultasUriMatcher();
+       String id = uri.getLastPathSegment();
+
+       int linhas;
+
+        switch (matcher.match(uri)){
+
+            case ID_CONSULTA:
+                linhas = new DbTableConsultas(db).update(values, DbTableConsultas._ID + "=?",
+                        new String[] { id });
+
+            case ID_MEDICO:
+                linhas = new DbTableMedicos(db).update(values,
+                        DbTableMedicos._ID + "=?",
+                        new String[] {id});
+                break;
+
+            case ID_DADOS:
+                linhas = new DbTableMeusDados(db).update(values,
+                        DbTableMeusDados._ID + "=?",
+                        new String[] {id});
+                break;
+
+            case ID_DISTRITO:
+                linhas = new DbTableDistritos(db).update(values,
+                        DbTableDistritos._ID + "=?",
+                        new String[] {id});
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Uri Invalido:" + uri);
+
+        }
+
+        if(linhas > 0) notifyChanges(uri);
+        return linhas;
+
     }
 }
