@@ -18,6 +18,15 @@ public class ConsultaContentProvider extends ContentProvider {
 
     private static final String AUTHORITY = "pt.ipg.marcaoconsultas";
 
+    public static final Uri BASE_URI = Uri.parse("conten://" + AUTHORITY);
+    public static final Uri CONSULTA_URI = Uri.withAppendedPath(BASE_URI, DbTableConsultas.TABLE_CONSULTAS);
+    public static final  Uri MEUS_DADOS_URI = Uri.withAppendedPath(BASE_URI,
+            DbTableMeusDados.TABLE_NAME);
+    public static final Uri MEDICOS_URI = Uri.withAppendedPath(BASE_URI,
+            DbTableMeusDados.TABLE_NAME);
+    public static final  Uri DISTRITOS_URI = Uri.withAppendedPath(BASE_URI,
+            DbTableDistritos.TABLE_DIS);
+
     private static final int CONSULTA = 100;
     private static final int ID_CONSULTA = 101;
     private static final int MEUS_DADOS = 200;

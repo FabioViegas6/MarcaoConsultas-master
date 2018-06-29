@@ -1,15 +1,34 @@
 package pt.ipg.marcaoconsultas;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
 
 public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursorAdapter.ConsultasViewHolder> {
+
+    private Context context;
+    private Cursor cursor = null;
+    //private View.onClickListner viewHolderClickListener = null;
+    private int lastConcsultasClicked = -1;
+
+    public ConsultasCursorAdapter (Context context){
+        this.context = context;
+    }
+
+  /*  public void int getLastConcsultasClicked(){
+        return lastConcsultasClicked;
+    }*/
+
+
 
     /**
      * Called when RecyclerView needs a new {@link RecyclerView.ViewHolder} of the given type to represent
@@ -36,6 +55,7 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
     @NonNull
     @Override
     public ConsultasViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         return null;
     }
 
@@ -72,14 +92,25 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
      * @return The total number of items in this adapter.
      */
 
+
+
     @Override
     public int getItemCount() {
+        if (cursor == null)
         return 0;
+        return cursor.getCount();
     }
 
     public class ConsultasViewHolder extends RecyclerView.ViewHolder{
+
+        private TextView textViewNome;
+        private TextView textViewMovel;
+        private int idDados;
+
         public ConsultasViewHolder(View itemView) {
             super(itemView);
+
+          //  textViewNome = (TextView) itemView.findViewById(R.id.te);
         }
     }
 }
