@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ListView;
 
 import java.util.List;
 
@@ -17,21 +18,34 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
 
     private Context context;
     private Cursor cursor = null;
-    //private View.onClickListner viewHolderClickListener = null;
+    private View.onClickListener viewHolderClickListener;
     private int lastConcsultasClicked = -1;
 
     public ConsultasCursorAdapter (Context context){
         this.context = context;
+        viewHolderClickListener = null;
+    }
+    public void refreshData(Cursor cursor){
+        if (this.cursor != cursor){
+            this.cursor = cursor;
+            notifyDataSetChanged();
+        }
     }
 
-  /*  public void int getLastConcsultasClicked(){
+
+
+    public void setViewHolderClickListener(View.onClickListener viewHolderClickListener){
+        this.viewHolderClickListener = viewHolderClickListener;
+    }
+
+    public int getLastConcsultasClicked(){
         return lastConcsultasClicked;
-    }*/
+    }
 
 
 
     /**
-     * Called when RecyclerView needs a new {@link RecyclerView.ViewHolder} of the given type to represent
+     * Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
      * an item.
      * <p>
      * This new ViewHolder should be constructed with a new View that can represent the items
@@ -56,7 +70,8 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
     @Override
     public ConsultasViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        return null;
+        View item = LayoutInflater.from(context).inflate(R.layout.item_consultas, parent, false);
+        return new ConsultasViewHolder(item);
     }
 
 
@@ -73,7 +88,7 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
      * on (e.g. in a click listener), use {@link RecyclerView.ViewHolder#getAdapterPosition()} which will
      * have the updated adapter position.
      *
-     * Override {@link #onBindViewHolder(RecyclerView.ViewHolder, int, List)} instead if Adapter can
+     * Override {@link #onBindViewHolder(ViewHolder, int, List)} instead if Adapter can
      * handle efficient partial bind.
      *
      * @param holder The ViewHolder which should be updated to represent the contents of the
@@ -82,8 +97,11 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
      *                 */
 
     @Override
-    public void onBindViewHolder(@NonNull ConsultasCursorAdapter.ConsultasViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ConsultasViewHolder holder, int position) {
 
+        cursor.moveToPosition(position);
+        MeusDados meusDados = DbTableMeusDados.getCurrentMeusDadosBookFromCursor(cursor);
+        holder.setMeusDados(meusDados);
     }
 
     /**
@@ -101,7 +119,7 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
         return cursor.getCount();
     }
 
-    public class ConsultasViewHolder extends RecyclerView.ViewHolder{
+    public class ConsultasViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView textViewNome;
         private TextView textViewMovel;
@@ -110,7 +128,28 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
         public ConsultasViewHolder(View itemView) {
             super(itemView);
 
-          //  textViewNome = (TextView) itemView.findViewById(R.id.te);
+            textViewNome = (TextView) itemView.findViewById(R.id.textViewNome);
+            textViewMovel= (TextView) itemView.findViewById(R.id.textViewNumero);
+
+            itemView.setOnClickListener( this);
+        }
+        public void setMeusDados(MeusDados meusDados){
+            textViewNome.setText(meusDados.getNome());
+            textViewMovel.setText(String.format("%d", meusDados.getTelemovel()));
+            idDados = meusDados.getId();
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION){
+                return;
+            }
+            if (viewHolderClickListener != null){
+                lastConcsultasClicked = idDados;
+                viewHolderClickListener.onClick(v);
+            }
         }
     }
+
 }

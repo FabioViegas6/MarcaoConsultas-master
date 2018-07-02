@@ -262,7 +262,7 @@ public class ConsultasDbTest {
         assertEquals("Falha a ler os meus dados", 1, cursor.getCount());
         assertEquals("Falha a ler o primeiro dado", cursor.moveToNext());
 
-        MeusDados meusDados = DbTableMeusDados.getCurrentDadosBookFromCursor(cursor);
+        MeusDados meusDados = DbTableMeusDados.getCurrentMeusDadosBookFromCursor(cursor);
 
         assertEquals(" nome  incorreto", expectedNome, meusDados.getNome());
         assertEquals("telemovel  incorreto ", expectedTelemovel, meusDados.getTelemovel());

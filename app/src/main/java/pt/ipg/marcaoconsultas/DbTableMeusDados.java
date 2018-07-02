@@ -41,7 +41,7 @@ public class DbTableMeusDados implements BaseColumns {
         ContentValues values = new ContentValues();
 
         values.put(FIELD_NAME, meusDados.getNome());
-        values.put(_ID, meusDados.getId());
+     //   values.put(_ID, meusDados.getId());
         values.put(FIELD_ID_CONSULTAS, meusDados.getIdconsultas());
         values.put(FIELD_MOVEL, meusDados.getTelemovel());
 
@@ -52,7 +52,7 @@ public class DbTableMeusDados implements BaseColumns {
         return db.insert(TABLE_NAME, null, values);
     }
 
-    public static MeusDados getCurrentDadosBookFromCursor(Cursor cursor){
+    public static MeusDados getCurrentMeusDadosBookFromCursor(Cursor cursor){
 
         final int posId = cursor.getColumnIndex(_ID);
         final int posName = cursor.getColumnIndex(FIELD_NAME);
