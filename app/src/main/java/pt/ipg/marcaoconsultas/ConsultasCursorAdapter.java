@@ -18,12 +18,12 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
 
     private Context context;
     private Cursor cursor = null;
-    private View.onClickListener viewHolderClickListener;
+    private View.onClickListener viewHolderClickListener = null;
     private int lastConcsultasClicked = -1;
 
     public ConsultasCursorAdapter (Context context){
         this.context = context;
-        viewHolderClickListener = null;
+
     }
     public void refreshData(Cursor cursor){
         if (this.cursor != cursor){
@@ -147,7 +147,7 @@ public class ConsultasCursorAdapter extends RecyclerView.Adapter<ConsultasCursor
             }
             if (viewHolderClickListener != null){
                 lastConcsultasClicked = idDados;
-                viewHolderClickListener.onClick(v);
+                //viewHolderClickListener.;
             }
         }
     }
