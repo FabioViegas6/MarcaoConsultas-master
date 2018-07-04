@@ -6,6 +6,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -273,7 +274,7 @@ public class ConsultaContentProvider extends ContentProvider {
 
 
             default:
-                throw new UnsupportedOperationException("Unknown URI: " + uri);
+                throw new UnsupportedOperationException("Invalid URI: " + uri);
         }
         if (id > 0) {
             notifyChanges(uri);

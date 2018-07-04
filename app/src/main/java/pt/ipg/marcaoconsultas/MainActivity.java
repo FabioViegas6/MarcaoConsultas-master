@@ -45,7 +45,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         recyclerViewConsultas.setAdapter(consultasCursorAdapter);
 
 
-        //consultasCursorAdapter.setViewHolderClickListener( new View.);
+        consultasCursorAdapter.setViewHolderClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editMeusDados();
+            }
+        });
 
      getSupportLoaderManager().initLoader(CONSULTA_CURSOR_LOADER_ID, null, this);
     }
